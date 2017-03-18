@@ -20,13 +20,12 @@ int main(int argc, char *argv[]) {
     object_stack_new(&value_stack, 8);
 
     printf("Curr size: %d\n", value_stack.curr);
-    object *new_obj;
-    object_new(&new_obj, "name1");
+    object *new_obj = MC_Integer_new();
     INC_REF(new_obj);
     object_stack_push(&value_stack, &new_obj);
 
     printf("Curr size: %d\n", value_stack.curr);
-    object_new(&new_obj, "name2");
+    new_obj = MC_Integer_new();
     INC_REF(new_obj);
     object_stack_push(&value_stack, &new_obj);
 

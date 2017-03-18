@@ -19,4 +19,4 @@ main: $(c_object_files)
 	$(CC) -c $< -o $@ $(CCFLAGS) -I$(INCLUDES)
 
 clean:
-	@rm -r *.o
+	@rm -r *.o moocow
