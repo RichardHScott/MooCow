@@ -2,13 +2,17 @@
 #define MOOCOW_OBJECT_INTEGER_H
 
 #include <object.h>
-#include <moocow_malloc.h>
+#include <moocow_alloc.h>
+#include <type_check.h>
+#include <object_type.h>
 
 typedef struct moocow_integer_object {
-    OBJECTBASE
+    OBJECT_BASE
     long long value;
 } MC_Integer;
 
-MC_Integer* MC_Integer_new(void);
+MC_Type *MC_Type_Integer;
+
+void MC_integer_type_init(void);
 
 #endif

@@ -1,4 +1,4 @@
-CC=gcc
+CC=gcc-6
 CCX=g++
 
 CCFLAGS=-std=gnu99 -Wall -Wextra -g

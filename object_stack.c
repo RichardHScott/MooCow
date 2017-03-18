@@ -8,7 +8,7 @@ void object_stack_new(object_stack_t *new_stack, size_t initial_size) {
 
 void object_stack_delete(object_stack_t *stack) {
     for(size_t i=0; i<stack->curr; ++i) {
-        DEC_REF(&stack->stack[i]);
+        DEC_REF(stack->stack[i]);
     }
 
     free(stack->stack);

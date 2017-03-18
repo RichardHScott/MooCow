@@ -3,32 +3,19 @@
 
 #include <moocow_alloc.h>
 #include <string.h>
+#include <type_check.h>
 
-enum object_type {
-    NUMBER_TYPE,
-    STRING_TYPE,
-};
 
-struct obj_struct;
-
-typedef void (*delete_fn)(struct obj_struct**);
-typedef obj_struct* (*add_fn)(struct obj_struct*, struct obj_struct*);
-typedef obj_struct* (*negate_fn)(struct obj_struct*);
-typedef obj_struct* (*mul_fn)(struct obj_struct*, struct obj_struct*);
+struct object_type_struct;
 
 #define OBJECT_BASE \
     char *name; \
-    enum object_type type; \
+    struct object_type_struct *type; \
     size_t ref_count; \
-    delete_fn del; \
-    add_fn binary_add; \
-    negate_fn unary_negate; \
-    mul_fn binary_mul;  
 
-typedef struct obj_struct {
+typedef struct object_struct {
     OBJECT_BASE
 } object;
-
 
 void object_new(object* obj, const char* name);
 void object_delete(object* obj);
@@ -40,13 +27,28 @@ void object_delete(object* obj);
     (obj)->ref_count--; \
     if((obj)->ref_count == 0) { \
         object_delete(obj); \
-        if(x->del != NULL) \
-            (x->del)(obj); \
+        if((obj)->type->del != NULL) \
+            ((obj)->type->del)(obj); \
     } \
 } 
 
 object* object_add(object *obj1, object *obj2);
 object* object_mul(object *obj1, object *obj2);
 object* object_negate(object *obj);
+
+typedef object* (*new_fn)(const char* name);
+typedef void (*delete_fn)(struct object_struct*);
+typedef struct object_struct* (*add_fn)(struct object_struct*, struct object_struct*);
+typedef struct object_struct* (*negate_fn)(struct object_struct*);
+typedef struct object_struct* (*mul_fn)(struct object_struct*, struct object_struct*);
+
+typedef struct object_type_struct {
+    OBJECT_BASE
+    new_fn new;
+    delete_fn del;
+    add_fn binary_add;
+    negate_fn unary_negate;
+    mul_fn binary_mul;
+} MC_Type;
 
 #endif
