@@ -1,20 +1,18 @@
-#pragma once
+#ifndef OPCODES_H
+#define OPCODES_H
 
+#define NOP 0
 
-namespace MooCow {
+#define INTEGER_ADD 1
+#define INTEGER_SUB 2
+#define INTEGER_MUL 3
+#define INTEGER_DIV 4
 
-constexpr int NOP = 0;
+#define LOAD_CONST 0x10
+#define STORE_CONST 0x11
 
-constexpr int INTEGER_ADD = 1;
-constexpr int INTEGER_SUB = 2;
-constexpr int INTEGER_MUL = 3;
-constexpr int INTEGER_DIV = 4;
+#define RETURN 0x20
 
-constexpr int LOAD_CONST = 0x10;
-constexpr int STORE_CONST = 0x11;
+#define PRINT 0xFF
 
-constexpr int RETURN = 0x20;
-
-constexpr int PRINT = 0xFF;
-
-}
+#endif

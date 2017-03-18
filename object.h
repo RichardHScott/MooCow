@@ -1,68 +1,44 @@
-#pragma once
+#ifndef MOOCOW_OBJECT_H
+#define MOOCOW_OBJECT_H
 
-#include <memory>
+#include <moocow_alloc.h>
+#include <string.h>
 
-#include "object_impl.h"
+enum object_type {
+    NUMBER_TYPE,
+    STRING_TYPE,
 
-namespace MooCow {
-
-class Object {
-	std::shared_ptr<ObjectImpl> impl;
-
-public:
-	Object() {
-		impl = std::make_shared<ObjectImpl>();
-	}
-
-	virtual ~Object() {
-	}
-
-	Object(Object const& other) :
-		impl(other.impl) {}
 };
 
-class IntegerPrimitive
-	: public Object {
+struct obj_struct;
 
-private:
-	int value;
+typedef void (*delete_fn)(struct obj_struct**);
 
-public:
-	IntegerPrimitive(int i) : value(i) {
-	}
+#define OBJECT_BASE \
+    char *name; \
+    enum object_type type; \
+    size_t ref_count; \
+    delete_fn del;
 
-	virtual ~IntegerPrimitive() {
-	}
+typedef struct obj_struct {
+    OBJECT_BASE
+} object;
 
-	IntegerPrimitive(IntegerPrimitive& other) :
-		value(other.value) {
-	}
 
-	int getvalue() const {
-		return value;
-	}
+void object_new(object** obj, const char* name);
+void object_delete(object** obj);
 
-	void setvalue(int value) {
-		this->value = value;
-	}
-};
+#define INC_REF(x) (++(x)->ref_count);
 
-class StringPrimitive
-	: public Object {
+#define DEC_REF(obj) \
+{ \
+    object *x = *obj; \
+    x->ref_count--; \
+    if(x->ref_count == 0) { \
+        if(x->del != NULL) \
+            (x->del)(obj); \
+        object_delete(obj); \
+    } \
+} 
 
-	std::string str;
-
-public:
-	StringPrimitive() {
-	}
-
-	std::string getvalue() const {
-		return str;
-	}
-
-	void setvalue(std::string const& str) {
-		this->str = str;
-	}
-};
-
-}
+#endif
